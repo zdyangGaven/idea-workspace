@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>														<!--此maven项目继承的父项目-->
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.5.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.nosoft.eut</groupId>
+	<artifactId>learn-lession</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>                     <!--mvn package 打包方式，  jar为jar包   war 为war包（由于采用web3.0 规范，是没有web.xml 的，需另行配置（别忘了servlet））-->
+	<name>learn-lession</name>
+	<description>springboot学习</description>
+
+	<properties>
+		<java.version>1.8</java.version>							<!--JDK版本1.8-->
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>	<!--redis依赖-->
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>		<!--springboot Web 依赖-->
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>			 <!--devtools工具依赖，可实现热部署-->
+			<scope>provided</scope>									<!--maven的scope参数含义： compile:编译时依赖（默认） provided:类似compile,需要额外提供的依赖  runtime:运行时依赖  test:测试时依赖（不会随项目发布）    system:类似provided，需要显式提供包含依赖的jar（不推荐使用）   《打war包时：compile和runtime两种依赖打包时会打进去，provided、system、test都不会打进去》-->
+			<optional>true</optional>								<!--maven的optional:true   默认为false，有传递性..   为true时表示此依赖不会产生传递依赖   eg：A依赖B，B依赖C, 在B项目配置中引入C依赖时加上<optional>true</optional>；这样在A项目引入B依赖时就不会连带着把C引进来了,否则会把C依赖jar引进了-->
+		</dependency>
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>					 <!--sqlserver 依赖-->
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>	 <!--测试依赖-->
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>	 <!--要通过maven进行打包操作 需要这个插件-->
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+
+<!--
+devtools工具:（说白了就是:例如在使用用myeclipse工具，服务在运行时，修改了java类内的内容，直接就生效了，不需要重启服务（当然改变了类的结构是需要重启服务的））
+（1） devtools可以实现页面热部署（即jsp页面修改后会立即生效，这个可以直接在application.properties文件中配置spring.thymeleaf.cache=false来实现），
+      实现类文件热部署（java类文件修改后不会立即生效），实现对属性文件的热部署。(java类热部署前提条件：类的结构不发生变化（1.类方法结构不变 2.类属性不变）)
+即devtools会监听classpath下的文件变动，并且会立即重启应用（发生在保存时机），注意：因为其采用的虚拟机机制，该项重启是很快的
+（2）配置了后在修改java文件后也就支持了热启动，不过这种方式是属于项目重启（速度比较快的项目重启），会清空session中的值，也就是如果有用户登陆的话，项目重启后需要重新登陆。
+默认情况下，/META-INF/maven，/META-INF/resources，/resources，/static，/templates，/public这些文件夹下的文件修改不会使应用重启，但是会重新加载（devtools内嵌了一个LiveReload server，当资源发生改变时，浏览器刷新）
+
+当我们修改了Java类后，IDEA默认是不自动编译的，而spring-boot-devtools又是监测classpath下的文件发生变化才会重启应用，所以需要设置IDEA的自动编译：
+（1）File-Settings-Compiler-Build Project automatically
+（2）ctrl + shift + alt + /,选择Registry,勾上 Compiler autoMake allow when app running
+-->
