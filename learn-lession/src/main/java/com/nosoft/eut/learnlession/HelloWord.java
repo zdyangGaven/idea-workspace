@@ -15,7 +15,7 @@ public class HelloWord {
 
     @RequestMapping("/")
     public String home() {
-        System.out.println("哈哈哈哈哈哈哈哈1111");
+        System.out.println("哈哈哈哈哈哈哈哈111122222");
         return "hello  ni ya gaga !";
     }
         public static void main(String[] args){
